@@ -238,3 +238,98 @@ public class TestMain {
 
 } 
 ```  
+
+
+###  在@configuration中引入其他配置类（在TestConfiguration中引入TestConfigurationTwo）
+
+创建TestBeanTwo,TestConfigurationTwo
+
+```java
+public class TestBeanTwo {
+
+    private String userName;
+    private String password;
+    private String email;
+
+    public void sayHello() {
+        System.out.println("TestBeanTwo sayHello...");
+    }
+
+    public String toString() {
+        return "username:" + this.userName + ",url:" + this.email + ",password:" + this.password;
+    }
+
+    public void start() {
+        System.out.println("TestBeanTwo 初始化。。。");
+    }
+
+    public void cleanUp() {
+        System.out.println("TestBeanTwo 销毁。。。");
+    }
+
+}
+```  
+
+```java
+@Configuration
+public class TestConfigurationTwo {
+
+    public TestConfigurationTwo(){
+        System.out.println("--- init TestConfigurationTwo ----");
+    }
+
+    @Bean(name = "testBeanTwo",initMethod = "start",destroyMethod = "cleanUp")
+    public TestBeanTwo testBeanTwo(){
+        return new TestBeanTwo();
+    }
+
+}
+```  
+
+使用Import 引入其他配置类
+
+@Import(TestConfigurationTwo.class)
+
+```java
+@Configuration
+@ComponentScan("com.rebote.springboot.bean")
+@Import(TestConfigurationTwo.class)
+public class TestConfiguration {
+
+    public TestConfiguration(){
+        System.out.println("----init TestConfiguration---");
+    }
+
+    @Bean(name = "testBean",initMethod = "start",destroyMethod = "cleanUp")
+    @Scope("prototype")
+    public TestBean testBean(){
+        return new TestBean();
+    }
+
+}
+``` 
+
+加载配置类，启用容器，获取自动注册的bean，并调用
+
+```java
+public class TestMain {
+
+    public static void main(String[] args) {
+        ApplicationContext context = new AnnotationConfigApplicationContext(TestConfiguration.class);
+
+        TestBean testBean = (TestBean) context.getBean("testBean");
+        testBean.sayHello();
+
+        TestBean testBean2 = (TestBean) context.getBean("testBean");
+        testBean.sayHello();
+
+        TestComponentBean componentBean = (TestComponentBean) context.getBean("testComponentBean");
+        componentBean.sayHello();
+
+        TestBeanTwo testBeanTwo = (TestBeanTwo) context.getBean("testBeanTwo");
+        testBeanTwo.sayHello();
+    }
+
+}
+``` 
+

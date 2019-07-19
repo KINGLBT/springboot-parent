@@ -1,10 +1,7 @@
 package com.rebote.springboot.config;
 
 import com.rebote.springboot.bean.TestBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.*;
 
 /**
  * @Auther: Da Shuai
@@ -15,6 +12,7 @@ import org.springframework.context.annotation.Scope;
  */
 @Configuration
 @ComponentScan("com.rebote.springboot.bean")
+@Import(TestConfigurationTwo.class)
 public class TestConfiguration {
 
     public TestConfiguration(){

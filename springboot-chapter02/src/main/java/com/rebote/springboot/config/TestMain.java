@@ -1,6 +1,7 @@
 package com.rebote.springboot.config;
 
 import com.rebote.springboot.bean.TestBean;
+import com.rebote.springboot.bean.TestBeanTwo;
 import com.rebote.springboot.bean.TestComponentBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -26,6 +27,8 @@ public class TestMain {
         TestComponentBean componentBean = (TestComponentBean) context.getBean("testComponentBean");
         componentBean.sayHello();
 
+        TestBeanTwo testBeanTwo = (TestBeanTwo) context.getBean("testBeanTwo");
+        testBeanTwo.sayHello();
     }
 
 }
