@@ -2,6 +2,7 @@ package com.rebote.springboot.config;
 
 import com.rebote.springboot.bean.TestBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Scope;
  * @Email: 1043489207@qq.com
  */
 @Configuration
+@ComponentScan("com.rebote.springboot.bean")
 public class TestConfiguration {
 
     public TestConfiguration(){

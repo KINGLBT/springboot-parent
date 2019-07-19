@@ -162,7 +162,79 @@ public class TestConfiguration {
 
 }
 
+```  
+
+  
+
+###  @Configuration启动容器+@Component注册Bean（@Controller,@Service,@Mapper同理）
+
+Spring中，可以使用@Component、@Controller、@Service、@Ripository等注解注册bean，当然需要配置@ComponentScan注解进行自动扫描。
+
+创建Bean类，并使用@Component注解
+
+```java
+@Component
+public class TestComponentBean {
+
+    private String userName;
+    private String password;
+    private String email;
+
+    public void sayHello() {
+        System.out.println("TestComponentBean sayHello...");
+    }
+
+    public String toString() {
+        return "username:" + this.userName + ",url:" + this.email + ",password:" + this.password;
+    }
+
+    public void start() {
+        System.out.println("TestComponentBean 初始化。。。");
+    }
+
+    public void cleanUp() {
+        System.out.println("TestComponentBean 销毁。。。");
+    }
+}
+```
+
+在主配置类上添加自动扫描@ComponentScan
+
+```java
+@Configuration
+@ComponentScan("com.rebote.springboot.bean")
+public class TestConfiguration {
+
+    public TestConfiguration(){
+        System.out.println("----init TestConfiguration---");
+    }
+
+    @Bean(name = "testBean",initMethod = "start",destroyMethod = "cleanUp")
+    @Scope("prototype")
+    public TestBean testBean(){
+        return new TestBean();
+    }
+
+}
 ```    
 
+加载配置类，启用容器，获取自动注册的bean，并调用
+```java
+public class TestMain {
 
-    
+    public static void main(String[] args) {
+        ApplicationContext context = new AnnotationConfigApplicationContext(TestConfiguration.class);
+
+        TestBean testBean = (TestBean) context.getBean("testBean");
+        testBean.sayHello();
+
+        TestBean testBean2 = (TestBean) context.getBean("testBean");
+        testBean.sayHello();
+
+        TestComponentBean componentBean = (TestComponentBean) context.getBean("testComponentBean");
+        componentBean.sayHello();
+
+    }
+
+} 
+```  
