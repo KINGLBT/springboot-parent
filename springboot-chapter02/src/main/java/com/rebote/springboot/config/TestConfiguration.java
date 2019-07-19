@@ -13,6 +13,7 @@ import org.springframework.context.annotation.*;
 @Configuration
 @ComponentScan("com.rebote.springboot.bean")
 @Import(TestConfigurationTwo.class)
+@ImportResource("classpath:applicationContext-configuration.xml")
 public class TestConfiguration {
 
     public TestConfiguration(){

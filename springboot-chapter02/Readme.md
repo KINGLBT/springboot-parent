@@ -333,3 +333,98 @@ public class TestMain {
 }
 ``` 
 
+###  在@configuration中引入spring的xml配置文件
+
+创建TestBeanXML
+```java
+public class TestBeanXml {
+
+    private String userName;
+    private String password;
+    private String email;
+
+    public void sayHello() {
+        System.out.println("TestBeanXml sayHello...");
+    }
+
+    public String toString() {
+        return "username:" + this.userName + ",url:" + this.email + ",password:" + this.password;
+    }
+
+    public void start() {
+        System.out.println("TestBeanXml 初始化。。。");
+    }
+
+    public void cleanUp() {
+        System.out.println("TestBeanXml 销毁。。。");
+    }
+
+}
+``` 
+
+创建applicationContext-configuration.xml
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:util="http://www.springframework.org/schema/util" xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd" default-lazy-init="false">
+    <bean id="testBeanXml" class="com.rebote.springboot.bean.TestBeanXml"></bean>
+</beans>
+``` 
+
+
+使用ImportResource 引入XML配置类
+@ImportResource("classpath:applicationContext-configuration.xml")
+```java
+@Configuration
+@ComponentScan("com.rebote.springboot.bean")
+@Import(TestConfigurationTwo.class)
+@ImportResource("classpath:applicationContext-configuration.xml")
+public class TestConfiguration {
+
+    public TestConfiguration(){
+        System.out.println("----init TestConfiguration---");
+    }
+
+    @Bean(name = "testBean",initMethod = "start",destroyMethod = "cleanUp")
+    @Scope("prototype")
+    public TestBean testBean(){
+        return new TestBean();
+    }
+
+}
+``` 
+
+加载配置类，启用容器，获取自动注册的bean，并调用
+```java
+public class TestMain {
+
+    public static void main(String[] args) {
+        ApplicationContext context = new AnnotationConfigApplicationContext(TestConfiguration.class);
+
+        TestBean testBean = (TestBean) context.getBean("testBean");
+        testBean.sayHello();
+
+        TestBean testBean2 = (TestBean) context.getBean("testBean");
+        testBean.sayHello();
+
+        TestComponentBean componentBean = (TestComponentBean) context.getBean("testComponentBean");
+        componentBean.sayHello();
+
+        TestBeanTwo testBeanTwo = (TestBeanTwo) context.getBean("testBeanTwo");
+        testBeanTwo.sayHello();
+
+        TestBeanXml testBeanXml = (TestBeanXml) context.getBean("testBeanXml");
+        testBeanXml.sayHello();
+    }
+
+}
+``` 
