@@ -118,3 +118,51 @@ public class TestMain {
 
 ###  @Bean的作用于以及初始化方法以及销毁方法
 
+
+
+```java
+public class TestBean {
+
+    private String userName;
+    private String password;
+    private String email;
+
+    public void sayHello() {
+        System.out.println("TestBean sayHello...");
+    }
+
+    public String toString() {
+        return "username:" + this.userName + ",url:" + this.email + ",password:" + this.password;
+    }
+
+    public void start() {
+        System.out.println("TestBean 初始化。。。");
+    }
+
+    public void cleanUp() {
+        System.out.println("TestBean 销毁。。。");
+    }
+
+}
+```
+
+```java
+@Configuration
+public class TestConfiguration {
+
+    public TestConfiguration(){
+        System.out.println("----init TestConfiguration---");
+    }
+
+    @Bean(name = "testBean",initMethod = "start",destroyMethod = "cleanUp")
+    @Scope("prototype")
+    public TestBean testBean(){
+        return new TestBean();
+    }
+
+}
+
+```    
+
+
+    

@@ -21,4 +21,12 @@ public class TestBean {
         return "username:" + this.userName + ",url:" + this.email + ",password:" + this.password;
     }
 
+    public void start() {
+        System.out.println("TestBean 初始化。。。");
+    }
+
+    public void cleanUp() {
+        System.out.println("TestBean 销毁。。。");
+    }
+
 }

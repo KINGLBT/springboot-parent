@@ -3,6 +3,7 @@ package com.rebote.springboot.config;
 import com.rebote.springboot.bean.TestBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 /**
  * @Auther: Da Shuai
@@ -18,7 +19,8 @@ public class TestConfiguration {
         System.out.println("----init TestConfiguration---");
     }
 
-    @Bean
+    @Bean(name = "testBean",initMethod = "start",destroyMethod = "cleanUp")
+    @Scope("prototype")
     public TestBean testBean(){
         return new TestBean();
     }

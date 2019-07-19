@@ -18,6 +18,9 @@ public class TestMain {
 
         TestBean testBean = (TestBean) context.getBean("testBean");
         testBean.sayHello();
+
+        TestBean testBean2 = (TestBean) context.getBean("testBean");
+        testBean.sayHello();
     }
 
 }
