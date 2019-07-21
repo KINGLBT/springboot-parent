@@ -15,6 +15,8 @@
     <modules>
         <module>springboot-chapter01</module>
         <module>springboot-chapter02</module>
+        <module>springboot-chapter03</module>
+        <module>springboot-chapter04</module>
     </modules>
     <name>springboot-parent</name>
     <description>Demo project for Spring Boot</description>
