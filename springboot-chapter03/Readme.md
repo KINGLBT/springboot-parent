@@ -136,6 +136,44 @@ spring.devtools.add-properties=false
 
 
 
+## 自动重启
+
+使用spring-boot-devtools的应用程序会在类路径上的文件发生更改时自动重新启动。在IDE中工作时，这可能是一个有用的功能，因为它为代码更改提供了非常快速的反馈循环。
+默认情况下，将监视类路径上指向文件夹的任何条目的更改。但是，某些资源（如静态资源和视图模板）无需重新启动应用程序。SpringBoot中，可以设置哪些资源变更，不重新启动
+
+## Excluding Resources
+
+某些资源在更改时不一定需要触发重启。例如，可以就地编辑Thymeleaf模板。默认情况下，更改/ META-INF / maven，/ META-INF / resources，
+/ resources，/ static，/ public或/ templates中的资源不会触发重新启动，但会触发实时重新加载。如果要自定义这些排除项，
+可以使用spring.devtools.restart.exclude属性。例如，要仅排除/ static和/ public，您需要设置以下属性：
+spring.devtools.restart.exclude=static/**,public/**
+
+
+### 示例：除了public目录下的文件修改不重启，其他都重启
+
+1、在application.properties配置文件中添加以下内容
+```json
+spring.devtools.restart.exclude=public/**
+``` 
+
+2、修改static下的test.js，看是否重启
+
+
+## 监听其他额外的路径
+
+从上面可以知道，使用spring-boot-devtools的应用程序会在类路径上的文件发生更改时自动重新启动。那么对不在类路径中的文件进行更改时，
+怎么才能重新启动或重新加载应用程序
+```json
+# 指定public目录下文件修改，都重启
+spring.devtools.restart.additional-paths=public/**
+# 排除public，其他都重启
+spring.devtools.restart.exclude=public/**
+``` 
+
+
+
+
+
 
 
 

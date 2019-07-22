@@ -27,6 +27,7 @@ public class CustomerController {
     @GetMapping(value = "/test")
     public ModelAndView test(HttpServletRequest req) {
         // UserEntity userEntity = getCurrentUser(req);
+        System.out.println("fdasfdasfd");
         ModelAndView mv = new ModelAndView();
         mv.setViewName("/show.html");
         return mv;
