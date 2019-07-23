@@ -17,6 +17,7 @@
         <module>springboot-chapter02</module>
         <module>springboot-chapter03</module>
         <module>springboot-chapter04</module>
+        <module>springboot-chapter05</module>
     </modules>
     <name>springboot-parent</name>
     <description>Demo project for Spring Boot</description>
@@ -43,15 +44,6 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
     <dependencyManagement>
         <dependencies>
             <!-- Override Spring Data release train provided by Spring Boot
@@ -73,5 +65,22 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.1.6.RELEASE</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

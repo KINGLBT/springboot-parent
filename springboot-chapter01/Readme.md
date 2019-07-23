@@ -77,6 +77,7 @@
 
 ## SpringBoot 可执行jar包，必须添加以下依赖，否则会报找不到主类
 
+### 如果使用的是spring-boot-starter-parent这个parent POM,直接添加下面的插件就可以
 ```xml
     <build>
         <plugins>
@@ -87,3 +88,26 @@
         </plugins>
     </build>
 ``` 
+
+### spring-boot-dependencies这个BOM，则上面的插件将失效
+```xml
+    <build>
+        <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+        </plugins>
+    </build>
+``` 
+
+
+https://www.bbsmax.com/A/xl56E8oJrZ/
