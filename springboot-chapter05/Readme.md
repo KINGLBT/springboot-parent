@@ -19,7 +19,7 @@ SpringBoot 在启动的时候，会自动将图片转化成ASCII文本，并打�
 
  | 变量        | 描述    |
     | --------   | -----:   |
-    | ${application.version}        | $1      |  
+    | ${application.version}        | 应用的版本号,定义在 MANIFEST.MF中. 例如： Implementation-Version: 1.0 将会打印 1.0.      |  
     | ${application.formatted-version}        | $1      |  
     | ${spring-boot.version}        | $1      | 
     | ${spring-boot.formatted-version}        | $1      | 
