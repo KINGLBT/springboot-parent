@@ -18,10 +18,10 @@ SpringBoot 在启动的时候，会自动将图片转化成ASCII文本，并打�
 ## Banner中可用变量
 
  | 变量        | 描述    |
-    | --------   | -----:   |
-    | ${application.version}        | 应用的版本号,定义在 MANIFEST.MF中. 例如： Implementation-Version: 1.0 将会打印 1.0.      |  
-    | ${application.formatted-version}        | $1      |  
-    | ${spring-boot.version}        | $1      | 
-    | ${spring-boot.formatted-version}        | $1      | 
-    | ${Ansi.NAME} (or ${AnsiColor.NAME}, ${AnsiBackground.NAME}, ${AnsiStyle.NAME})        | $1      |、
-    | ${application.title}        | $1      |     
+ | --------   | -----:   |
+ | ${application.version}                  | 应用的版本号,定义在 MANIFEST.MF中. 例如： Implementation-Version: 1.0 将会打印 1.0.|  
+ | ${application.formatted-version}        | 应用的版本号格式, as declared in MANIFEST.MF and formatted for display (surrounded with brackets and prefixed with v). For example (v1.0).|  
+ | ${spring-boot.version}                  | 您使用的 Spring Boot 版本。例如 2.1.1.RELEASE.。| 
+ | ${spring-boot.formatted-version}        | 您使用的 Spring Boot 版本格式化之后显示（用括号括起来，以 v 为前缀）。例如 (v2.1.1.RELEASE)。| 
+ | ${Ansi.NAME} (or ${AnsiColor.NAME}, ${AnsiBackground.NAME}, ${AnsiStyle.NAME})        | 其中 NAME 是 ANSI 转义码的名称。有关详细信息，请参阅 AnsiPropertySource。|
+ | ${application.title}                    | 您的应用标题，声明在 MANIFEST.MF 中，例如 Implementation-Title: MyApp 打印为 MyApp。|     
