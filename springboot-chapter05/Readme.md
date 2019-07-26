@@ -25,3 +25,7 @@ SpringBoot 在启动的时候，会自动将图片转化成ASCII文本，并打�
  | ${spring-boot.formatted-version}        | 您使用的 Spring Boot 版本格式化之后显示（用括号括起来，以 v 为前缀）。例如 (v2.1.1.RELEASE)。| 
  | ${Ansi.NAME} (or ${AnsiColor.NAME}, ${AnsiBackground.NAME}, ${AnsiStyle.NAME})        | 其中 NAME 是 ANSI 转义码的名称。有关详细信息，请参阅 AnsiPropertySource。|
  | ${application.title}                    | 您的应用标题，声明在 MANIFEST.MF 中，例如 Implementation-Title: MyApp 打印为 MyApp。|     
+ 
+ # 自定义 SpringApplication
+ 
+ 
