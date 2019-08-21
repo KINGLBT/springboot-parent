@@ -28,6 +28,8 @@ SpringBoot 在启动的时候，会自动将图片转化成ASCII文本，并打�
  
  # 自定义 SpringApplication
  
+ 
+ 
  # 应用程序事件与监听器
  
  ## Spring的事件发布机制
@@ -125,3 +127,111 @@ public class MainTest {
 }
 
   ```
+  
+ ## SpringBoot应用程序事件
+ 
+ 除了常见的Spring Framework事件，比如 ContextRefreshedEvent，SpringApplication 还会发送其他应用程序事件。
+ 
+ 当您运行应用时，应用程序事件将按照以下顺序发送：
+ 
+ + 1.在开始应用开始运行但还没有进行任何处理时（除了注册监听器和初始化器[initializer]），将发送 ApplicationStartingEvent。
+ + 2.当 Environment 被上下文使用，但是在上下文创建之前，将发送 ApplicationEnvironmentPreparedEvent。
+ + 3.在开始刷新之前，bean 定义被加载之后发送 ApplicationPreparedEvent。
+ + 4.在上下文刷新之后且所有的应用和命令行运行器（command-line runner）被调用之前发送 ApplicationStartedEvent。
+ + 5.在应用程序和命令行运行器（command-line runner）被调用之后，将发出 ApplicationReadyEvent，该事件用于通知应用已经准备处理请求。
+ + 6.如果启动时发生异常，将发送 ApplicationFailedEvent。
+ 
+ 试着以创建这些事件的监听者,并使用@Bean注入，看看是否每个监听者，都可以收到相应的事件通知
+
+
++ 监听 ApplicationStartingEvent事件
+ 
+ ```java
+package com.rebote.springboot.listener;
+
+import org.springframework.boot.context.event.ApplicationStartingEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ApplicationStartingEventListener implements ApplicationListener<ApplicationStartingEvent> {
+    public void onApplicationEvent(ApplicationStartingEvent applicationStartingEvent) {
+        System.out.println("收到applicationStartingEvent通知");
+    }
+}
+```
+
++ 监听 ApplicationEnvironmentPreparedEvent事件
+ 
+ ```java
+package com.rebote.springboot.listener;
+
+import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ApplicationEnvironmentPreparedEventListener implements ApplicationListener<ApplicationEnvironmentPreparedEvent> {
+    public void onApplicationEvent(ApplicationEnvironmentPreparedEvent applicationEnvironmentPreparedEvent) {
+        System.out.println("收到applicationEnvironmentPreparedEvent通知");
+    }
+}
+```
+
++ 监听 ApplicationPreparedEvent 事件
+ 
+ ```java
+package com.rebote.springboot.listener;
+
+import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ApplicationEnvironmentPreparedEventListener implements ApplicationListener<ApplicationEnvironmentPreparedEvent> {
+    public void onApplicationEvent(ApplicationEnvironmentPreparedEvent applicationEnvironmentPreparedEvent) {
+        System.out.println("收到applicationEnvironmentPreparedEvent通知");
+    }
+}
+```
+
++ 监听 ApplicationStartedEvent 事件
+ 
+ ```java
+package com.rebote.springboot.listener;
+
+import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.boot.context.event.ApplicationStartingEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ApplicationStartedEventListener implements ApplicationListener<ApplicationStartedEvent> {
+    public void onApplicationEvent(ApplicationStartedEvent applicationStartedEvent) {
+        System.out.println("收到ApplicationStartedEvent通知");
+    }
+}
+
+```
+
++ 监听 ApplicationReadyEvent 事件
+ 
+ ```java
+package com.rebote.springboot.listener;
+
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.boot.context.event.ApplicationStartingEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ApplicationReadyEventEventListener implements ApplicationListener<ApplicationReadyEvent> {
+    public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
+        System.out.println("收到applicationReadyEvent通知");
+    }
+}
+
+
+```
+
+最后，只收到ApplicationStartedEvent和ApplicationReadyEvent通知，如下图：
