@@ -28,4 +28,100 @@ SpringBoot 在启动的时候，会自动将图片转化成ASCII文本，并打�
  
  # 自定义 SpringApplication
  
+ # 应用程序事件与监听器
  
+ ## Spring的事件发布机制
+ 
+ 事件机制使用监听者模式。事件机制相关的核心类有四个：
+
+ + ApplicationEvent：Spring中的事件基类
+ 
+```java
+ public abstract class ApplicationEvent extends EventObject {
+     /**
+      * 创建一个事件，需要指定事件源
+      */
+     public ApplicationEvent(Object source) {
+         super(source);
+         this.timestamp = System.currentTimeMillis();
+     }
+ }
+```
+
+ + ApplicationEventPublisher: 发布事件这，调用广播发布事件
+
+```java
+public interface ApplicationEventPublisher {
+    /**发布事件*/
+    default void publishEvent(ApplicationEvent event) {
+        publishEvent((Object) event);
+    }
+    void publishEvent(Object event);
+}
+```
+ 
+ + ApplicationEventMulticaster: 广播，持有观察者集合，可向集合内的观察者通知事件
+ 
+ ```java
+public interface ApplicationEventMulticaster {
+    /**
+     * 添加监听者（观察者）
+     */
+    void addApplicationListener(ApplicationListener<?> listener);
+
+    /**
+     * 删除监听者（观察者）
+     */
+    void removeApplicationListener(ApplicationListener<?> listener);
+
+    /**
+     * 向所有监听者发布事件
+     */
+    void multicastEvent(ApplicationEvent event);
+}
+ ```
+ 
+ + ApplicationListener: 观察者，接受对应事件后，执行逻辑。
+ 
+  ```java
+public interface ApplicationListener<E extends ApplicationEvent> extends EventListener {
+    /**
+     * 接收事件后，执行相应逻辑
+     */
+    void onApplicationEvent(E event);
+}
+  ```
+  
+事件发布者ApplicationEventPublisher持有广播ApplicationEventMulticaster，广播负责添加观察者，以及向所有观察者广播事件。
+
+一个事件ApplicationEvent可以通过发布者ApplicationEventPublisher发布后，会调用广播ApplicationEventMulticaster通知所有观察者，
+
+观察者ApplicationListener收到通知后执行相关操作。
+
+### 示例1
+
+  ```java
+public class MainTest {
+
+    public static void main(String[] args) {
+        //构建广播器
+        ApplicationEventMulticaster multicaster = new SimpleApplicationEventMulticaster();
+        //广播添加监听器
+        multicaster.addApplicationListener(new RegisterListener1());
+        multicaster.addApplicationListener(new RegisterListener2());
+
+        //构建事件发布者
+        ApplicationEventPublisher eventPublicsher = new RegiserEventPublisher(multicaster);
+
+        //构建注册事件
+        User user = new User("jack", "18782252509", "jack_email@163.com");
+        System.out.println("用户注册……");
+        RegisterEvent registerEvent = new RegisterEvent(user);
+
+        //发布注册事件
+        eventPublicsher.publishEvent(registerEvent);
+    }
+
+}
+
+  ```
