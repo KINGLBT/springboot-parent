@@ -235,3 +235,94 @@ public class ApplicationReadyEventEventListener implements ApplicationListener<A
 ```
 
 最后，只收到ApplicationStartedEvent和ApplicationReadyEvent通知，如下图：
+
+![Image text](https://raw.githubusercontent.com/KINGLBT/springboot-parent/master/image/chapter1/05-1.png)
+
+为什么收不到其他消息呢？
+
+因为有些事件，是在ApplicationContext创建之前触发的，而上面的监听器，都是通过@Bean自动注册监听器。也就是消息的触发，发生在监听器
+注册之前了，在监听器还没有注册成功之前，这些消息就触发了，监听器肯定收不到消息。
+
+SpringBoot中，提供了一些解决方法：
+
++ 1.通过 SpringApplication.addListeners(​...) 或者 SpringApplicationBuilder.listeners(...​) 方法注册它们
+
+ ```java
+@SpringBootApplication
+public class Application {
+
+    public static void main(String[] args) {
+        //SpringApplication.run(Application.class,args);
+        SpringApplication app = new SpringApplication(Application.class);
+        //app.setBannerMode(Banner.Mode.OFF);
+        // 添加监听器,必须放在run之前
+        app.addListeners(new ApplicationPreparedEventListener(),new ApplicationEnvironmentPreparedEventListener(),new ApplicationStartingEventListener());
+        app.run(args);
+    }
+
+}
+```
+
+如下所示，事件都打印出来了：
+
+ ```java
+"C:\Program Files\Java\jdk1.8.0_111\bin\java.exe" -XX:TieredStopAtLevel=1 -noverify -Dspring.output.ansi.enabled=always -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=63260 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=localhost -Dspring.liveBeansView.mbeanDomain -Dspring.application.admin.enabled=true "-javaagent:D:\JAVA-SoftWare\IntelliJ IDEA 2018.2.5\lib\idea_rt.jar=63261:D:\JAVA-SoftWare\IntelliJ IDEA 2018.2.5\bin" -Dfile.encoding=UTF-8 -classpath "C:\Program Files\Java\jdk1.8.0_111\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\deploy.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\ext\access-bridge-64.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\ext\cldrdata.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\ext\jaccess.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\ext\jfxrt.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\ext\nashorn.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\ext\sunec.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\ext\sunmscapi.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\ext\sunpkcs11.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\ext\zipfs.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\javaws.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\jfxswt.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\management-agent.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\plugin.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_111\jre\lib\rt.jar;D:\IdeaProjects\springboot-parent\springboot-chapter05\target\classes;D:\JAVA-SoftWare\repo\org\springframework\boot\spring-boot-starter\2.1.6.RELEASE\spring-boot-starter-2.1.6.RELEASE.jar;D:\JAVA-SoftWare\repo\org\springframework\boot\spring-boot\2.1.6.RELEASE\spring-boot-2.1.6.RELEASE.jar;D:\JAVA-SoftWare\repo\org\springframework\spring-context\5.1.8.RELEASE\spring-context-5.1.8.RELEASE.jar;D:\JAVA-SoftWare\repo\org\springframework\boot\spring-boot-autoconfigure\2.1.6.RELEASE\spring-boot-autoconfigure-2.1.6.RELEASE.jar;D:\JAVA-SoftWare\repo\org\springframework\boot\spring-boot-starter-logging\2.1.6.RELEASE\spring-boot-starter-logging-2.1.6.RELEASE.jar;D:\JAVA-SoftWare\repo\ch\qos\logback\logback-classic\1.2.3\logback-classic-1.2.3.jar;D:\JAVA-SoftWare\repo\ch\qos\logback\logback-core\1.2.3\logback-core-1.2.3.jar;D:\JAVA-SoftWare\repo\org\apache\logging\log4j\log4j-to-slf4j\2.11.2\log4j-to-slf4j-2.11.2.jar;D:\JAVA-SoftWare\repo\org\apache\logging\log4j\log4j-api\2.11.2\log4j-api-2.11.2.jar;D:\JAVA-SoftWare\repo\org\slf4j\jul-to-slf4j\1.7.26\jul-to-slf4j-1.7.26.jar;D:\JAVA-SoftWare\repo\javax\annotation\javax.annotation-api\1.3.2\javax.annotation-api-1.3.2.jar;D:\JAVA-SoftWare\repo\org\springframework\spring-core\5.1.8.RELEASE\spring-core-5.1.8.RELEASE.jar;D:\JAVA-SoftWare\repo\org\springframework\spring-jcl\5.1.8.RELEASE\spring-jcl-5.1.8.RELEASE.jar;D:\JAVA-SoftWare\repo\org\yaml\snakeyaml\1.23\snakeyaml-1.23.jar;D:\JAVA-SoftWare\repo\org\slf4j\slf4j-api\1.7.26\slf4j-api-1.7.26.jar;D:\JAVA-SoftWare\repo\org\springframework\boot\spring-boot-starter-web\2.1.6.RELEASE\spring-boot-starter-web-2.1.6.RELEASE.jar;D:\JAVA-SoftWare\repo\org\springframework\boot\spring-boot-starter-json\2.1.6.RELEASE\spring-boot-starter-json-2.1.6.RELEASE.jar;D:\JAVA-SoftWare\repo\com\fasterxml\jackson\core\jackson-databind\2.9.9\jackson-databind-2.9.9.jar;D:\JAVA-SoftWare\repo\com\fasterxml\jackson\core\jackson-annotations\2.9.0\jackson-annotations-2.9.0.jar;D:\JAVA-SoftWare\repo\com\fasterxml\jackson\core\jackson-core\2.9.9\jackson-core-2.9.9.jar;D:\JAVA-SoftWare\repo\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.9.9\jackson-datatype-jdk8-2.9.9.jar;D:\JAVA-SoftWare\repo\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.9.9\jackson-datatype-jsr310-2.9.9.jar;D:\JAVA-SoftWare\repo\com\fasterxml\jackson\module\jackson-module-parameter-names\2.9.9\jackson-module-parameter-names-2.9.9.jar;D:\JAVA-SoftWare\repo\org\springframework\boot\spring-boot-starter-tomcat\2.1.6.RELEASE\spring-boot-starter-tomcat-2.1.6.RELEASE.jar;D:\JAVA-SoftWare\repo\org\apache\tomcat\embed\tomcat-embed-core\9.0.21\tomcat-embed-core-9.0.21.jar;D:\JAVA-SoftWare\repo\org\apache\tomcat\embed\tomcat-embed-el\9.0.21\tomcat-embed-el-9.0.21.jar;D:\JAVA-SoftWare\repo\org\apache\tomcat\embed\tomcat-embed-websocket\9.0.21\tomcat-embed-websocket-9.0.21.jar;D:\JAVA-SoftWare\repo\org\hibernate\validator\hibernate-validator\6.0.17.Final\hibernate-validator-6.0.17.Final.jar;D:\JAVA-SoftWare\repo\javax\validation\validation-api\2.0.1.Final\validation-api-2.0.1.Final.jar;D:\JAVA-SoftWare\repo\org\jboss\logging\jboss-logging\3.3.2.Final\jboss-logging-3.3.2.Final.jar;D:\JAVA-SoftWare\repo\com\fasterxml\classmate\1.4.0\classmate-1.4.0.jar;D:\JAVA-SoftWare\repo\org\springframework\spring-web\5.1.8.RELEASE\spring-web-5.1.8.RELEASE.jar;D:\JAVA-SoftWare\repo\org\springframework\spring-beans\5.1.8.RELEASE\spring-beans-5.1.8.RELEASE.jar;D:\JAVA-SoftWare\repo\org\springframework\spring-webmvc\5.1.8.RELEASE\spring-webmvc-5.1.8.RELEASE.jar;D:\JAVA-SoftWare\repo\org\springframework\spring-aop\5.1.8.RELEASE\spring-aop-5.1.8.RELEASE.jar;D:\JAVA-SoftWare\repo\org\springframework\spring-expression\5.1.8.RELEASE\spring-expression-5.1.8.RELEASE.jar" com.rebote.springboot.Application
+收到applicationStartingEvent通知
+收到applicationEnvironmentPreparedEvent通知
+                            _ooOoo_
+                           o8888888o
+                           88" . "88
+                           (| -_- |)
+                            O\ = /O
+                        ____/`---'\____
+                      .   ' \\| |// `.
+                       / \\||| : |||// \
+                     / _||||| -:- |||||- \
+                       | | \\\ - /// | |
+                     | \_| ''\---/'' | |
+                      \ .-\__ `-` ___/-. /
+                   ___`. .' /--.--\ `. . __
+                ."" '< `.___\_<|>_/___.' >'"".
+               | | : `- \`.;`\ _ /`;.`/ - ` : | |
+                 \ \ `-. \_ __\ /__ _/ .-` / /
+         ======`-.____`-.___\_____/___.-`____.-'======
+                            `=---='
+            ::2.1.6.RELEASE
+         .............................................
+                  佛祖镇楼                  BUG辟易
+          佛曰:
+                  写字楼里写字间，写字间里程序员；
+                  程序人员写程序，又拿程序换酒钱。
+                  酒醒只在网上坐，酒醉还来网下眠；
+                  酒醉酒醒日复日，网上网下年复年。
+                  但愿老死电脑间，不愿鞠躬老板前；
+                  奔驰宝马贵者趣，公交自行程序员。
+                  别人笑我忒疯癫，我笑自己命太贱；
+                  不见满街漂亮妹，哪个归得程序员？
+
+2019-08-22 10:47:44.879  INFO 7356 --- [           main] com.rebote.springboot.Application        : Starting Application on DESKTOP-OBF2T7O with PID 7356 (D:\IdeaProjects\springboot-parent\springboot-chapter05\target\classes started by lmluo in D:\IdeaProjects\springboot-parent)
+2019-08-22 10:47:44.881  INFO 7356 --- [           main] com.rebote.springboot.Application        : No active profile set, falling back to default profiles: default
+收到ApplicationPreparedEvent通知
+2019-08-22 10:47:45.524  INFO 7356 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2019-08-22 10:47:45.539  INFO 7356 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2019-08-22 10:47:45.539  INFO 7356 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.21]
+2019-08-22 10:47:45.617  INFO 7356 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2019-08-22 10:47:45.617  INFO 7356 --- [           main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 700 ms
+2019-08-22 10:47:45.739  INFO 7356 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2019-08-22 10:47:45.854  INFO 7356 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2019-08-22 10:47:45.855  INFO 7356 --- [           main] com.rebote.springboot.Application        : Started Application in 1.224 seconds (JVM running for 2.27)
+收到ApplicationStartedEvent通知
+收到applicationReadyEvent通知
+```
+
++ 2.在配置文件中指定
+
+如果您希望无论应用使用何种创建方式都能自动注册这些监听器，您都可以将 META-INF/spring.factories 文件添加到项目中，
+并使用 org.springframework.context.ApplicationListener 属性键指向您的监听器
+
+ ```java
+org.springframework.context.ApplicationListener=\
+  com.rebote.springboot.listener.ApplicationEnvironmentPreparedEventListener,\
+  com.rebote.springboot.listener.ApplicationPreparedEventListener,\
+  com.rebote.springboot.listener.ApplicationStartingEventListener
+```

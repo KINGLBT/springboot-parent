@@ -1,0 +1,4 @@
+org.springframework.context.ApplicationListener=\
+  com.rebote.springboot.listener.ApplicationEnvironmentPreparedEventListener,\
+  com.rebote.springboot.listener.ApplicationPreparedEventListener,\
+  com.rebote.springboot.listener.ApplicationStartingEventListener
