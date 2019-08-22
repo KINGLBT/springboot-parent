@@ -236,7 +236,7 @@ public class ApplicationReadyEventEventListener implements ApplicationListener<A
 
 最后，只收到ApplicationStartedEvent和ApplicationReadyEvent通知，如下图：
 
-![Image text](https://raw.githubusercontent.com/KINGLBT/springboot-parent/master/image/chapter1/05-1.png)
+![Image text](https://github.com/KINGLBT/springboot-parent/blob/master/image/chapter05/05-1.png)
 
 为什么收不到其他消息呢？
 
@@ -326,3 +326,111 @@ org.springframework.context.ApplicationListener=\
   com.rebote.springboot.listener.ApplicationPreparedEventListener,\
   com.rebote.springboot.listener.ApplicationStartingEventListener
 ```
+
+
+ # web环境
+ 
+ SpringApplication 试图为您创建正确类型的 ApplicationContext。确定 WebApplicationType 的算法非常简单：
+ 
+ + 如果存在 Spring MVC，则使用 AnnotationConfigServletWebServerApplicationContext
+ 
+ + 如果 Spring MVC 不存在且存在 Spring WebFlux，则使用 AnnotationConfigReactiveWebServerApplicationContext
+ 
+ +否则，使用 AnnotationConfigApplicationContext
+ 
+ 这意味着如果您在同一个应用程序中使用了 Spring MVC 和 Spring WebFlux 中的新 WebClient，默认情况下将使用 Spring MVC。您可以通过调用 setWebApplicationType(WebApplicationType) 修改默认行为。
+ 
+ 也可以调用 setApplicationContextClass(...) 来完全控制 ApplicationContext 类型。
+ 
+  # 访问应用程序参数
+  
+  如何在应用程序中访问SpringApplication.run(​...)传入进来的参数？
+  
+  + 1.注入 org.springframework.boot.ApplicationArguments
+   
+   ```java
+  @RestController
+  public class CustomerController {
+  
+      @Autowired
+      private ApplicationArguments applicationArguments;
+  
+      @RequestMapping("/getRunArguments")
+      public void getRunArguments(){
+          String[] array = applicationArguments.getSourceArgs();
+          for (String arg:array) {
+              System.out.println(arg);
+          }
+      }
+  
+  }
+  ```
+  
+  # CommandLineRunner 和 ApplicationRunner 使用
+ 
+ 如果您需要在 SpringApplication 启动时运行一些代码，可以实现 ApplicationRunner 或者 CommandLineRunner 接口。这两个接口的
+ 工作方式是一样的，都提供了一个单独的 run 方法，它将在 SpringApplication.run(​...) 完成之前调用。
+  
+ 允许实现多个ApplicationRunner 或者 CommandLineRunner 接口，可以通过order指定执行顺序
+  
+```java
+ package com.rebote.springboot.component;
+ 
+ import org.springframework.boot.ApplicationArguments;
+ import org.springframework.boot.ApplicationRunner;
+ import org.springframework.core.annotation.Order;
+ import org.springframework.stereotype.Component;
+ 
+ @Component
+ @Order(103)
+ public class MyApplicationRunner implements ApplicationRunner {
+     public void run(ApplicationArguments args) throws Exception {
+         for (String arg:args.getSourceArgs()) {
+             System.out.println(arg);
+         }
+         System.out.println("MyApplicationRunner,我在 SpringApplication.run() 完成之前调用");
+     }
+ }
+
+```
+    
+```java
+package com.rebote.springboot.component;
+
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
+
+@Component
+@Order(60)
+public class MyApplicationRunner2 implements ApplicationRunner {
+    public void run(ApplicationArguments args) throws Exception {
+        for (String arg:args.getSourceArgs()) {
+            System.out.println(arg);
+        }
+        System.out.println("MyApplicationRunner2,我在 SpringApplication.run() 完成之前调用");
+    }
+}
+
+```
+      
+```java
+package com.rebote.springboot.component;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
+
+@Component
+@Order(101)
+public class MyCommandLineRunner implements CommandLineRunner {
+    public void run(String... args) throws Exception {
+        for (String arg:args) {
+            System.out.println(arg);
+        }
+        System.out.println("MyCommandLineRunner,我在 SpringApplication.run() 完成之前调用");
+    }
+}
+```
+  
