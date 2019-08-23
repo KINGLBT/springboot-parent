@@ -14,6 +14,7 @@ public class Application {
         SpringApplication app = new SpringApplication(Application.class);
         //app.setBannerMode(Banner.Mode.OFF);
         // 添加监听器,必须放在run之前
+        //fdsafaf
         //app.addListeners(new ApplicationPreparedEventListener(),new ApplicationEnvironmentPreparedEventListener(),new ApplicationStartingEventListener());
         app.run(args);
     }
