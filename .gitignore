@@ -45,3 +45,4 @@ master
 */out/
 out/
 build/
+*.plantuml

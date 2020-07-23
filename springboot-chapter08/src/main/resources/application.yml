@@ -1,0 +1,7 @@
+spring:
+  main:
+    lazy-initialization: true
+  banner:
+    location: banner1.txt
+    image:
+      location: banner.jpg
